@@ -4,6 +4,10 @@
  */
 package view;
 
+import java.text.DateFormat;
+import java.util.Date;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Edilson Ricardo
@@ -15,6 +19,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
      */
     public TelaPrincipal() {
         initComponents();
+        menuRelatorio.setVisible(false);
+        menuCadastroUsuario.setVisible(false);
+        //As linhas abaixo substituem a label DATA "lblData", pela data actual do sistema ao inicializar o form
+        //Poderia ter colocado este dado no metodo "formWindowActivated"
+        Date data = new Date();
+        DateFormat formato = DateFormat.getDateInstance(DateFormat.SHORT);
+        lblData.setText(formato.format(data));
+        
     }
 
     /**
@@ -43,6 +55,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
         javax.swing.GroupLayout desktopLayout = new javax.swing.GroupLayout(desktop);
         desktop.setLayout(desktopLayout);
@@ -62,6 +79,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
         lblData.setText("Data");
 
         menuCadastro.setText("Cadastro  |");
+        menuCadastro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuCadastroActionPerformed(evt);
+            }
+        });
 
         menuCadastroCliente.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.ALT_DOWN_MASK));
         menuCadastroCliente.setText("Cliente");
@@ -73,6 +95,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         menuCadastroUsuario.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.ALT_DOWN_MASK));
         menuCadastroUsuario.setText("Usuário");
+        menuCadastroUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuCadastroUsuarioActionPerformed(evt);
+            }
+        });
         menuCadastro.add(menuCadastroUsuario);
 
         menu.add(menuCadastro);
@@ -139,7 +166,29 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     private void menuOpcoesSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuOpcoesSairActionPerformed
         // TODO add your handling code here:
+        int sair = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja sair?", "Sair", JOptionPane.YES_NO_OPTION);
+        
+        if(sair == JOptionPane.YES_OPTION){
+            System.exit(0);
+        }
     }//GEN-LAST:event_menuOpcoesSairActionPerformed
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        // TODO add your handling code here:
+        
+        
+    }//GEN-LAST:event_formWindowActivated
+
+    private void menuCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCadastroActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuCadastroActionPerformed
+
+    private void menuCadastroUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCadastroUsuarioActionPerformed
+        // TODO add your handling code here:
+        TelaCadUsuario telaUsuario = new TelaCadUsuario();
+        telaUsuario.setVisible(true);
+        desktop.add(telaUsuario);
+    }//GEN-LAST:event_menuCadastroUsuarioActionPerformed
 
     /**
      * @param args the command line arguments
@@ -179,17 +228,17 @@ public class TelaPrincipal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane desktop;
     private javax.swing.JLabel lblData;
-    private javax.swing.JLabel lblUsuario;
+    public static javax.swing.JLabel lblUsuario;
     private javax.swing.JMenuBar menu;
     private javax.swing.JMenu menuAjuda;
     private javax.swing.JMenuItem menuAjudaSobre;
     private javax.swing.JMenu menuCadastro;
     private javax.swing.JMenuItem menuCadastroCliente;
     private javax.swing.JMenuItem menuCadastroOS;
-    private javax.swing.JMenuItem menuCadastroUsuario;
+    public static javax.swing.JMenuItem menuCadastroUsuario;
     private javax.swing.JMenu menuOpcoes;
     private javax.swing.JMenuItem menuOpcoesSair;
-    private javax.swing.JMenu menuRelatorio;
+    public static javax.swing.JMenu menuRelatorio;
     private javax.swing.JMenuItem menuRelatorioServicos;
     // End of variables declaration//GEN-END:variables
 }
