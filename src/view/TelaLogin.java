@@ -2,6 +2,7 @@ package view;
 
 import java.sql.*;
 import dao.ModuloConexao;
+import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 
 /**
@@ -9,7 +10,7 @@ import javax.swing.JOptionPane;
  * @author Edilson Ricardo
  */
 public class TelaLogin extends javax.swing.JFrame {
-    
+
     Connection conexao = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
@@ -26,20 +27,23 @@ public class TelaLogin extends javax.swing.JFrame {
             if (rs.next()) {
                 TelaPrincipal tPrincipal = new TelaPrincipal();
                 // A linha abaixo obtem o conteudo do campo perfil da tabela usuarios
-                String perfil = rs.getString(6);
-                String usuario = rs.getString(2);
-                TelaPrincipal.lblUsuario.setText(usuario); // Pode-se usar deste jeito porque o objecto lblUsuario é static. 
+                String nivelDoPerfil = rs.getString(6);
+                String nomdeDeUsuario = rs.getString(2);
+                TelaPrincipal.lblUsuario.setText(nomdeDeUsuario); // Pode-se usar deste jeito porque o objecto lblUsuario é static. 
                 //A estrutura abaixo faz tratamento das telas a exibir
-                if(perfil.equals("admin")){
-                tPrincipal.setVisible(true);
-                TelaPrincipal.menuCadastroUsuario.setVisible(true);
-                TelaPrincipal.menuRelatorio.setVisible(true);
-                this.dispose();
-                conexao.close();
-                }else{
+                if (nivelDoPerfil.equalsIgnoreCase("admin")) {
                     tPrincipal.setVisible(true);
+                    TelaPrincipal.menuCadastroUsuario.setVisible(true);
+                    TelaPrincipal.menuRelatorio.setVisible(true);
                     this.dispose();
+                } else {
+                    //Coloquei este "if" para caso queira adicionar mais um perfil me seja facil. Poderia ter deixado somente com "else"
+                    if (nivelDoPerfil.equalsIgnoreCase("padrao")) { 
+                        tPrincipal.setVisible(true);
+                        this.dispose();
+                    }
                 }
+                    conexao.close();
             } else {
                 JOptionPane.showMessageDialog(null, "Usuário e/ou senha inválido.");
             }
@@ -61,6 +65,8 @@ public class TelaLogin extends javax.swing.JFrame {
         } else {
             lblStatus.setText("Não Conectado ao Banco de Dados.");
         }
+        //A linha abaixo adiciona um texto quando o mouse fica sobre o componente/objecto em causa
+        txtNomeUsuario.setToolTipText("Nome de Usuário para Login");
     }
 
     /**
@@ -95,10 +101,21 @@ public class TelaLogin extends javax.swing.JFrame {
                 btnLoginActionPerformed(evt);
             }
         });
+        btnLogin.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                btnLoginKeyPressed(evt);
+            }
+        });
 
         lblLoginTitulo.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         lblLoginTitulo.setForeground(new java.awt.Color(0, 0, 0));
         lblLoginTitulo.setText("LOGIN");
+
+        txtSenha.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtSenhaKeyPressed(evt);
+            }
+        });
 
         lblStatus.setText("Status");
 
@@ -157,6 +174,20 @@ public class TelaLogin extends javax.swing.JFrame {
         txtNomeUsuario.setText("");
         txtSenha.setText("");
     }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void btnLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnLoginKeyPressed
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_btnLoginKeyPressed
+
+    private void txtSenhaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSenhaKeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            login();
+            txtNomeUsuario.setText("");
+            txtSenha.setText("");
+        }
+    }//GEN-LAST:event_txtSenhaKeyPressed
 
     /**
      * @param args the command line arguments
