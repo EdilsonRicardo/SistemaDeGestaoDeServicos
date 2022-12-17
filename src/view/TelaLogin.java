@@ -2,8 +2,10 @@ package view;
 
 import java.sql.*;
 import dao.ModuloConexao;
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
+import javax.swing.border.LineBorder;
 
 /**
  *
@@ -67,6 +69,7 @@ public class TelaLogin extends javax.swing.JFrame {
         }
         //A linha abaixo adiciona um texto quando o mouse fica sobre o componente/objecto em causa
         txtNomeUsuario.setToolTipText("Nome de Usuário para Login");
+        // txtNomeUsuario.setBorder(new LineBorder(Color.red,1)); Esta linha muda a cor das bordas do textfield
     }
 
     /**
