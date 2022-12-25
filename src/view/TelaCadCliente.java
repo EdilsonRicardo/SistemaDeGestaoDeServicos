@@ -7,6 +7,7 @@ package view;
 import java.sql.*;
 import dao.ModuloConexao;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
 
 public class TelaCadCliente extends javax.swing.JInternalFrame {
@@ -24,18 +25,18 @@ public class TelaCadCliente extends javax.swing.JInternalFrame {
     }
 
     private void actualizarDados() {
-        String sql = "Update tbclientes set nome=?, endereco=?, telefone=?, email=? where nome=?";
+        String sql = "Update tbclientes set nome=?, endereco=?, telefone=?, email=? where idcliente=?";
         try {
             ps = conexao.prepareStatement(sql);
             ps.setString(1, txtNome.getText());
             ps.setString(2, txtEndereco.getText());
             ps.setString(3, txtTelefone.getText());
             ps.setString(4, txtEmail.getText());
-            ps.setString(5, txtNome.getText());
+            ps.setString(5, txtID.getText());
             // Validação da campos obrigatorios
             if (txtNome.getText().isEmpty() || txtTelefone.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Preencha os campos obrigatórios");
-
+                
             } else {
                 //As linhas abaixo sao usadas para confirmar a actualizar de dados na tabela
                 int adicionar = ps.executeUpdate();//A linha actualiza a tabela usuarios com os dados do formulario. Poderia ter sido somente "ps.                                  executeUpdate()"
@@ -44,8 +45,10 @@ public class TelaCadCliente extends javax.swing.JInternalFrame {
                     txtNome.setText("");
                     txtEmail.setText("");
                     txtTelefone.setText("");
+                    txtID.setText("");
                     txtEndereco.setText("");
                     btnRegistar.setEnabled(true);
+                    ((DefaultTableModel) tabelaClientes.getModel()).setRowCount(0);
                 }
             }
         } catch (Exception e) {
@@ -205,6 +208,11 @@ public class TelaCadCliente extends javax.swing.JInternalFrame {
 
         jLabel6.setText("Pesquisar Nome:");
 
+        tabelaClientes = new javax.swing.JTable(){
+            public boolean isCellEditable(int rowIndex, int colIndex){
+                return false;
+            }
+        };
         tabelaClientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -213,6 +221,8 @@ public class TelaCadCliente extends javax.swing.JInternalFrame {
                 "idcliente", "nome", "endereço", "telefone", "email"
             }
         ));
+        tabelaClientes.setFocusable(false);
+        tabelaClientes.getTableHeader().setReorderingAllowed(false);
         tabelaClientes.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tabelaClientesMouseClicked(evt);

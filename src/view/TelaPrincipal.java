@@ -95,6 +95,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         menuCadastroOS.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.ALT_DOWN_MASK));
         menuCadastroOS.setText("OS");
+        menuCadastroOS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuCadastroOSActionPerformed(evt);
+            }
+        });
         menuCadastro.add(menuCadastroOS);
 
         menuCadastroUsuario.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.ALT_DOWN_MASK));
@@ -155,13 +160,13 @@ public class TelaPrincipal extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktop)
             .addGroup(layout.createSequentialGroup()
                 .addGap(90, 90, 90)
                 .addComponent(lblUsuario)
                 .addGap(18, 18, 18)
                 .addComponent(lblData)
-                .addContainerGap(480, Short.MAX_VALUE))
+                .addContainerGap(472, Short.MAX_VALUE))
+            .addComponent(desktop)
         );
 
         setSize(new java.awt.Dimension(1127, 651));
@@ -200,6 +205,13 @@ public class TelaPrincipal extends javax.swing.JFrame {
         tCliente.setVisible(true);
         desktop.add(tCliente);
     }//GEN-LAST:event_menuCadastroClienteActionPerformed
+
+    private void menuCadastroOSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCadastroOSActionPerformed
+        // TODO add your handling code here:
+        TelaOS telaOS = new TelaOS();
+        telaOS.setVisible(true);
+        desktop.add(telaOS);
+    }//GEN-LAST:event_menuCadastroOSActionPerformed
 
     /**
      * @param args the command line arguments
