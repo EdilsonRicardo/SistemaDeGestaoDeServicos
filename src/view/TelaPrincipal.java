@@ -26,7 +26,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
         Date data = new Date();
         DateFormat formato = DateFormat.getDateInstance(DateFormat.SHORT);
         lblData.setText(formato.format(data));
-        
     }
 
     /**
