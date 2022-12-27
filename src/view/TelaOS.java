@@ -11,6 +11,7 @@ package view;
 import java.sql.*;
 import dao.ModuloConexao;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils; //Serve para preencher as tabelas
 
 public class TelaOS extends javax.swing.JInternalFrame {
@@ -61,18 +62,15 @@ public class TelaOS extends javax.swing.JInternalFrame {
             pst.setString(6, txtTecnico.getText());
             pst.setString(7, txtValorTotal.getText().replace(",", "."));
             pst.setString(8, txtID.getText());
-            if (txtID.getText().isEmpty() || txtEquipamento.getText().isEmpty() || txtServico.getText().isEmpty()) {
+            if (txtID.getText().isEmpty() || txtEquipamento.getText().isEmpty() || txtServico.getText().isEmpty() || cbSituacao.getSelectedItem().equals(" ")) {
                 JOptionPane.showMessageDialog(null, "Preencha os campos obirgatórios.");
             } else {
                 int adicionado = pst.executeUpdate();
                 if (adicionado > 0) {
                     JOptionPane.showMessageDialog(null, "Ordem de Serviço emitida com sucesso.");
-                    txtID.setText(null);
-                    txtEquipamento.setText(null);
-                    txtDefeito.setText(null);
-                    txtServico.setText(null);
-                    txtTecnico.setText(null);
-                    txtValorTotal.setText(null);
+                    btnAdicionar.setEnabled(false);
+                    btnConsultar.setEnabled(false);
+                    btnImprimir.setEnabled(true);
                 }
             }
         } catch (Exception e) {
@@ -83,7 +81,7 @@ public class TelaOS extends javax.swing.JInternalFrame {
     private void pesquisarOS() {
         //A linh abaixo cria uma caixa de entrada do tipo JOptionPane
         String num_os = JOptionPane.showInputDialog("Número da Ordem");
-        String sql = "select * from tbos where os = " + num_os;
+        String sql = "select os, date_format(data_os,'%d/%m/%Y - %H:%i'), tipo, situacao, equipamento, defeito, servico, tecnico, valor, idcliente from tbos where os=" + num_os;
         try {
             pst = conexao.prepareStatement(sql);
             rs = pst.executeQuery();
@@ -106,8 +104,12 @@ public class TelaOS extends javax.swing.JInternalFrame {
                 txtValorTotal.setText(rs.getString(9));
                 txtID.setText(rs.getString(10));
                 btnAdicionar.setEnabled(false);
+                btnConsultar.setEnabled(false);
                 txtPesquisar.setEnabled(false);
                 tbClientes.setVisible(false);
+                btnActualizar.setEnabled(true);
+                btnEliminar.setEnabled(true);
+                btnImprimir.setEnabled(true);
             } else {
                 if (num_os == null) {
                     // Este if esta aqui e nao coloquei nenhuma instrucao porque quando o usuario nao digita nenhum nr de ordem, cairía no JOption abaixo desnecessariamente 
@@ -134,23 +136,13 @@ public class TelaOS extends javax.swing.JInternalFrame {
             pst.setString(6, txtTecnico.getText());
             pst.setString(7, txtValorTotal.getText().replace(",", "."));
             pst.setString(8, txtNrServico.getText());
-            if (txtID.getText().isEmpty() || txtEquipamento.getText().isEmpty() || txtServico.getText().isEmpty()) {
+            if (txtID.getText().isEmpty() || txtEquipamento.getText().isEmpty() || txtServico.getText().isEmpty() || cbSituacao.getSelectedItem().equals(" ")) {
                 JOptionPane.showMessageDialog(null, "Preencha os campos obrigatórios.");
             } else {
                 int adicionado = pst.executeUpdate();
                 if (adicionado > 0) {
                     JOptionPane.showMessageDialog(null, "Ordem de Serviço Actualizada Com Sucesso.");
-                    txtID.setText(null);
-                    txtEquipamento.setText(null);
-                    txtDefeito.setText(null);
-                    txtServico.setText(null);
-                    txtTecnico.setText(null);
-                    txtValorTotal.setText(null);
-                    txtData.setText(null);
-                    txtNrServico.setText(null);
-                    tbClientes.setEnabled(true);
-                    txtPesquisar.setEnabled(true);
-                    btnAdicionar.setEnabled(true);
+                    limparCampos();
                 }
             }
         } catch (Exception e) {
@@ -167,23 +159,35 @@ public class TelaOS extends javax.swing.JInternalFrame {
                 pst.setString(1, txtNrServico.getText());
                 int apagar = pst.executeUpdate();
                 if (apagar > 0) {
-                    JOptionPane.showMessageDialog(null, "OS excluida com sucesso");
-                    txtID.setText(null);
-                    txtEquipamento.setText(null);
-                    txtDefeito.setText(null);
-                    txtServico.setText(null);
-                    txtTecnico.setText(null);
-                    txtValorTotal.setText(null);
-                    txtData.setText(null);
-                    txtNrServico.setText(null);
-                    tbClientes.setEnabled(true);
-                    txtPesquisar.setEnabled(true);
-                    btnAdicionar.setEnabled(true);
+                    JOptionPane.showMessageDialog(null, "OS excluída com sucesso");
+                    limparCampos();
                 }
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
             }
         }
+    }
+
+    private void limparCampos() {
+        txtID.setText(null);
+        txtPesquisar.setText(null);
+        txtEquipamento.setText(null);
+        txtDefeito.setText(null);
+        txtServico.setText(null);
+        txtTecnico.setText(null);
+        txtValorTotal.setText(null);
+        txtData.setText(null);
+        txtNrServico.setText(null);
+        ((DefaultTableModel) tbClientes.getModel()).setRowCount(0);
+        cbSituacao.setSelectedItem(" ");
+        
+        tbClientes.setEnabled(true);
+        txtPesquisar.setEnabled(true);
+        btnAdicionar.setEnabled(true);
+        btnConsultar.setEnabled(true);
+        btnActualizar.setEnabled(false);
+        btnEliminar.setEnabled(false);
+        btnImprimir.setEnabled(false);
     }
 
     /**
@@ -322,7 +326,7 @@ public class TelaOS extends javax.swing.JInternalFrame {
 
         jLabel3.setText("Situação:");
 
-        cbSituacao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Entrega Ok", "Orçamento Reprovado", "Aguradando Aprovação", "Aguradando Peças", "Abandonado Pelo Cliente", "Na Bancada", "Retornou" }));
+        cbSituacao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "Entrega Ok", "Orçamento Reprovado", "Aguradando Aprovação", "Aguradando Peças", "Abandonado Pelo Cliente", "Na Bancada", "Retornou" }));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Cliente"));
 
@@ -421,6 +425,7 @@ public class TelaOS extends javax.swing.JInternalFrame {
 
         btnActualizar.setText("Actualizar");
         btnActualizar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnActualizar.setEnabled(false);
         btnActualizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnActualizarActionPerformed(evt);
@@ -429,6 +434,7 @@ public class TelaOS extends javax.swing.JInternalFrame {
 
         btnEliminar.setText("Eliminar");
         btnEliminar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnEliminar.setEnabled(false);
         btnEliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEliminarActionPerformed(evt);
@@ -437,6 +443,7 @@ public class TelaOS extends javax.swing.JInternalFrame {
 
         btnImprimir.setText("Imprimir");
         btnImprimir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnImprimir.setEnabled(false);
 
         btnConsultar.setText("Consultar");
         btnConsultar.addActionListener(new java.awt.event.ActionListener() {

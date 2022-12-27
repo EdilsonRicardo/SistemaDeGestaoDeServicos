@@ -271,14 +271,15 @@
     <Component class="javax.swing.JComboBox" name="cbSituacao">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="7">
-            <StringItem index="0" value="Entrega Ok"/>
-            <StringItem index="1" value="Or&#xe7;amento Reprovado"/>
-            <StringItem index="2" value="Aguradando Aprova&#xe7;&#xe3;o"/>
-            <StringItem index="3" value="Aguradando Pe&#xe7;as"/>
-            <StringItem index="4" value="Abandonado Pelo Cliente"/>
-            <StringItem index="5" value="Na Bancada"/>
-            <StringItem index="6" value="Retornou"/>
+          <StringArray count="8">
+            <StringItem index="0" value=" "/>
+            <StringItem index="1" value="Entrega Ok"/>
+            <StringItem index="2" value="Or&#xe7;amento Reprovado"/>
+            <StringItem index="3" value="Aguradando Aprova&#xe7;&#xe3;o"/>
+            <StringItem index="4" value="Aguradando Pe&#xe7;as"/>
+            <StringItem index="5" value="Abandonado Pelo Cliente"/>
+            <StringItem index="6" value="Na Bancada"/>
+            <StringItem index="7" value="Retornou"/>
           </StringArray>
         </Property>
       </Properties>
@@ -465,6 +466,7 @@
         <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
           <Color id="Hand Cursor"/>
         </Property>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnActualizarActionPerformed"/>
@@ -476,6 +478,7 @@
         <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
           <Color id="Hand Cursor"/>
         </Property>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEliminarActionPerformed"/>
@@ -487,6 +490,7 @@
         <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
           <Color id="Hand Cursor"/>
         </Property>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="btnConsultar">
