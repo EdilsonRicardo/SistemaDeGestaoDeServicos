@@ -18,7 +18,7 @@ public class TelaOS extends javax.swing.JInternalFrame {
     Connection conexao = null;
     ResultSet rs = null;
     PreparedStatement pst = null;
-    
+
     //A linha abaixo cria a variavel para armazenar um texto de acordo com o raddiobutton seleccionado
     private String tipo;
 
@@ -28,8 +28,10 @@ public class TelaOS extends javax.swing.JInternalFrame {
     public TelaOS() {
         initComponents();
         conexao = ModuloConexao.conector();
+        txtNrServico.setEnabled(false);
+
     }
-    
+
     private void pesquisarCliente() {
         String sql = "select idcliente, nome, telefone from tbclientes where nome like ?";
         try {
@@ -41,41 +43,148 @@ public class TelaOS extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, e);
         }
     }
-     private void preencherCampos() {
+
+    private void preencherCampos() {
         int preencher = tbClientes.getSelectedRow();
         txtID.setText(tbClientes.getModel().getValueAt(preencher, 0).toString());
     }
-     
-     private void registarServico(){
-         String sql = "insert into tbos (tipo, situacao, equipamento, defeito, servico, tecnico, valor, idcliente) values (?,?,?,?,?,?,?,?)";
-         try {
-             pst = conexao.prepareStatement(sql);
-             pst.setString(1, tipo);
-             pst.setString(2, cbSituacao.getSelectedItem().toString());
-             pst.setString(3, txtEquipamento.getText());
-             pst.setString(4, txtDefeito.getText());
-             pst.setString(5, txtServico.getText());
-             pst.setString(6, txtTecnico.getText());
-             pst.setString(7, txtValorTotal.getText().replace(",", "."));
-             pst.setString(8, txtID.getText());
-             if (txtID.getText().isEmpty() || txtEquipamento.getText().isEmpty() || txtServico.getText().isEmpty()) {
-                 JOptionPane.showMessageDialog(null, "Preencha os campos obirgatórios.");
-             } else {
-                 int adicionado = pst.executeUpdate();
-                 if(adicionado>0){
-                     JOptionPane.showMessageDialog(null, "Ordem de Serviço emitida com sucesso.");
-                     txtID.setText(null);
-                     txtEquipamento.setText(null);
-                     txtDefeito.setText(null);
-                     txtServico.setText(null);
-                     txtTecnico.setText(null);
-                     txtValorTotal.setText(null);
-                 }
-             }
-         } catch (Exception e) {
-             JOptionPane.showMessageDialog(null, e);
-         }
-     }
+
+    private void registarServico() {
+        String sql = "insert into tbos (tipo, situacao, equipamento, defeito, servico, tecnico, valor, idcliente) values (?,?,?,?,?,?,?,?)";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, tipo);
+            pst.setString(2, cbSituacao.getSelectedItem().toString());
+            pst.setString(3, txtEquipamento.getText());
+            pst.setString(4, txtDefeito.getText());
+            pst.setString(5, txtServico.getText());
+            pst.setString(6, txtTecnico.getText());
+            pst.setString(7, txtValorTotal.getText().replace(",", "."));
+            pst.setString(8, txtID.getText());
+            if (txtID.getText().isEmpty() || txtEquipamento.getText().isEmpty() || txtServico.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Preencha os campos obirgatórios.");
+            } else {
+                int adicionado = pst.executeUpdate();
+                if (adicionado > 0) {
+                    JOptionPane.showMessageDialog(null, "Ordem de Serviço emitida com sucesso.");
+                    txtID.setText(null);
+                    txtEquipamento.setText(null);
+                    txtDefeito.setText(null);
+                    txtServico.setText(null);
+                    txtTecnico.setText(null);
+                    txtValorTotal.setText(null);
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+
+    private void pesquisarOS() {
+        //A linh abaixo cria uma caixa de entrada do tipo JOptionPane
+        String num_os = JOptionPane.showInputDialog("Número da Ordem");
+        String sql = "select * from tbos where os = " + num_os;
+        try {
+            pst = conexao.prepareStatement(sql);
+            rs = pst.executeQuery();
+            if (rs.next()) {
+                txtNrServico.setText(rs.getString(1));
+                txtData.setText(rs.getString(2));
+                String tipoRS = rs.getString(3);
+                if (tipoRS.equals("OS")) {
+                    rbOrdemdeServico.setSelected(true);
+                    tipo = "OS";
+                } else {
+                    rbOrcamento.setSelected(true);
+                    tipo = "Orçamento";
+                }
+                cbSituacao.setSelectedItem(rs.getString(4));
+                txtEquipamento.setText(rs.getString(5));
+                txtDefeito.setText(rs.getString(6));
+                txtServico.setText(rs.getString(7));
+                txtTecnico.setText(rs.getString(8));
+                txtValorTotal.setText(rs.getString(9));
+                txtID.setText(rs.getString(10));
+                btnAdicionar.setEnabled(false);
+                txtPesquisar.setEnabled(false);
+                tbClientes.setVisible(false);
+            } else {
+                if (num_os == null) {
+                    // Este if esta aqui e nao coloquei nenhuma instrucao porque quando o usuario nao digita nenhum nr de ordem, cairía no JOption abaixo desnecessariamente 
+                } else {
+                    JOptionPane.showMessageDialog(null, "Ordem de Servico Inexistente.");
+                }
+            }
+        } catch (java.sql.SQLSyntaxErrorException e) {
+            JOptionPane.showMessageDialog(null, "Ordem de Serviço inválida.");
+        } catch (Exception e2) {
+            JOptionPane.showMessageDialog(null, e2);
+        }
+    }
+
+    private void actualizarOS() {
+        String sql = "update tbos set tipo=?, situacao=?, equipamento=?, defeito=?, servico=?, tecnico=?, valor=? where os=?";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, tipo);
+            pst.setString(2, cbSituacao.getSelectedItem().toString());
+            pst.setString(3, txtEquipamento.getText());
+            pst.setString(4, txtDefeito.getText());
+            pst.setString(5, txtServico.getText());
+            pst.setString(6, txtTecnico.getText());
+            pst.setString(7, txtValorTotal.getText().replace(",", "."));
+            pst.setString(8, txtNrServico.getText());
+            if (txtID.getText().isEmpty() || txtEquipamento.getText().isEmpty() || txtServico.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Preencha os campos obrigatórios.");
+            } else {
+                int adicionado = pst.executeUpdate();
+                if (adicionado > 0) {
+                    JOptionPane.showMessageDialog(null, "Ordem de Serviço Actualizada Com Sucesso.");
+                    txtID.setText(null);
+                    txtEquipamento.setText(null);
+                    txtDefeito.setText(null);
+                    txtServico.setText(null);
+                    txtTecnico.setText(null);
+                    txtValorTotal.setText(null);
+                    txtData.setText(null);
+                    txtNrServico.setText(null);
+                    tbClientes.setEnabled(true);
+                    txtPesquisar.setEnabled(true);
+                    btnAdicionar.setEnabled(true);
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+
+    private void removerOS() {
+        int optionPane = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja excluir OS?", "Atenção", JOptionPane.YES_NO_OPTION);
+        if (optionPane == JOptionPane.YES_OPTION) {
+            String sql = "Delete from tbos where os=?";
+            try {
+                pst = conexao.prepareStatement(sql);
+                pst.setString(1, txtNrServico.getText());
+                int apagar = pst.executeUpdate();
+                if (apagar > 0) {
+                    JOptionPane.showMessageDialog(null, "OS excluida com sucesso");
+                    txtID.setText(null);
+                    txtEquipamento.setText(null);
+                    txtDefeito.setText(null);
+                    txtServico.setText(null);
+                    txtTecnico.setText(null);
+                    txtValorTotal.setText(null);
+                    txtData.setText(null);
+                    txtNrServico.setText(null);
+                    tbClientes.setEnabled(true);
+                    txtPesquisar.setEnabled(true);
+                    btnAdicionar.setEnabled(true);
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -113,11 +222,11 @@ public class TelaOS extends javax.swing.JInternalFrame {
         txtTecnico = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         txtValorTotal = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        btnAdicionar = new javax.swing.JButton();
+        btnActualizar = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
+        btnImprimir = new javax.swing.JButton();
+        btnConsultar = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -153,6 +262,8 @@ public class TelaOS extends javax.swing.JInternalFrame {
         txtNrServico.setEditable(false);
 
         txtData.setEditable(false);
+        txtData.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        txtData.setEnabled(false);
 
         buttonGroup1.add(rbOrcamento);
         rbOrcamento.setText("Orçamento");
@@ -177,21 +288,19 @@ public class TelaOS extends javax.swing.JInternalFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(34, 34, 34)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(rbOrcamento)
+                    .addComponent(jLabel1)
+                    .addComponent(txtNrServico, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(txtData, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(14, 14, 14))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(txtNrServico, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(77, 77, 77))
-                            .addComponent(txtData)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(rbOrcamento)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(rbOrdemdeServico)))
-                .addGap(31, 31, 31))
+                            .addComponent(jLabel2)
+                            .addComponent(rbOrdemdeServico))
+                        .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -201,7 +310,7 @@ public class TelaOS extends javax.swing.JInternalFrame {
                     .addComponent(jLabel1)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtNrServico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
@@ -217,7 +326,7 @@ public class TelaOS extends javax.swing.JInternalFrame {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Cliente"));
 
-        jLabel4.setText("ID:");
+        jLabel4.setText("*ID:");
 
         txtPesquisar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -252,6 +361,9 @@ public class TelaOS extends javax.swing.JInternalFrame {
             }
         });
         jScrollPane1.setViewportView(tbClientes);
+
+        txtID.setEditable(false);
+        txtID.setEnabled(false);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -299,24 +411,39 @@ public class TelaOS extends javax.swing.JInternalFrame {
 
         txtValorTotal.setText("0");
 
-        jButton1.setText("Adicionar ");
-        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnAdicionar.setText("Adicionar ");
+        btnAdicionar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAdicionar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnAdicionarActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Actualizar");
-        jButton2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnActualizar.setText("Actualizar");
+        btnActualizar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnActualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActualizarActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Eliminar");
-        jButton3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnEliminar.setText("Eliminar");
+        btnEliminar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
-        jButton4.setText("Imprimir");
-        jButton4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnImprimir.setText("Imprimir");
+        btnImprimir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        jButton5.setText("Consultar");
+        btnConsultar.setText("Consultar");
+        btnConsultar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConsultarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -357,19 +484,19 @@ public class TelaOS extends javax.swing.JInternalFrame {
                 .addContainerGap(22, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(btnAdicionar)
                 .addGap(42, 42, 42)
-                .addComponent(jButton5)
+                .addComponent(btnConsultar)
                 .addGap(36, 36, 36)
-                .addComponent(jButton2)
+                .addComponent(btnActualizar)
                 .addGap(36, 36, 36)
-                .addComponent(jButton3)
+                .addComponent(btnEliminar)
                 .addGap(31, 31, 31)
-                .addComponent(jButton4)
+                .addComponent(btnImprimir)
                 .addGap(138, 138, 138))
         );
 
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jButton1, jButton2, jButton3, jButton4, jButton5});
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnActualizar, btnAdicionar, btnConsultar, btnEliminar, btnImprimir});
 
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -404,11 +531,11 @@ public class TelaOS extends javax.swing.JInternalFrame {
                     .addComponent(txtValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5))
+                    .addComponent(btnAdicionar)
+                    .addComponent(btnActualizar)
+                    .addComponent(btnEliminar)
+                    .addComponent(btnImprimir)
+                    .addComponent(btnConsultar))
                 .addContainerGap(101, Short.MAX_VALUE))
         );
 
@@ -445,20 +572,35 @@ public class TelaOS extends javax.swing.JInternalFrame {
         tipo = "Orçamento";
     }//GEN-LAST:event_formInternalFrameOpened
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
         // TODO add your handling code here:
         registarServico();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnAdicionarActionPerformed
+
+    private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
+        // TODO add your handling code here:
+        pesquisarOS();
+    }//GEN-LAST:event_btnConsultarActionPerformed
+
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+        // TODO add your handling code here:
+        actualizarOS();
+    }//GEN-LAST:event_btnActualizarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        // TODO add your handling code here:
+        removerOS();
+    }//GEN-LAST:event_btnEliminarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnActualizar;
+    private javax.swing.JButton btnAdicionar;
+    private javax.swing.JButton btnConsultar;
+    private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnImprimir;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> cbSituacao;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
