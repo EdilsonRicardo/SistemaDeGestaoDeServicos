@@ -9,9 +9,12 @@ import java.text.DateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import java.sql.*;
+import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.view.JasperViewer;
+import org.apache.commons.dbcp.ConnectionFactory;
 /**
  *
  * @author Edilson Ricardo
@@ -230,17 +233,22 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     private void menuRelClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRelClientesActionPerformed
         // TODO add your handling code here:
-        int gerar = JOptionPane.showConfirmDialog(null, "Confirma a impressao","Atencao", JOptionPane.YES_NO_OPTION);
-        if(gerar == JOptionPane.YES_OPTION){
-            try {
-                //Usando a classe jasperprint para preparar a impressao do relatorio
-                JasperPrint imprimir = JasperFillManager.fillReport("C:\\Relatorios\\Relatorio de Clientes.jasper", null, conexao);
-                // A linha abaixo exibe o relatorio atraves da clasee JasperViewer
-                JasperViewer.viewReport(imprimir, false);
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, e);
-            }
-        }
+//        int gerar = JOptionPane.showConfirmDialog(null, "Confirma a impressao","Atencao", JOptionPane.YES_NO_OPTION);
+//        if(gerar == JOptionPane.YES_OPTION){  
+//            try {
+//                //Usando a classe jasperprint para preparar a impressao do relatorio
+////                JasperReport compilado = JasperCompileManager.compileReport("G:\\CODING\\Relatorios do Projecto Java + DB\\Relatorio de Clientes.jasper");
+////                JasperPrint relatorio = JasperFillManager.fillReport(compilado, null, conexao);
+//                JasperPrint print = JasperFillManager.fillReport(getClass().getResourceAsStream("/reportss/Relatorio de Clientes.jasper"), null, conexao);
+//                // A linha abaixo exibe o relatorio atraves da clasee JasperViewer
+//                JasperViewer.viewReport(print, false);
+//            } catch (Exception e) {
+//                JOptionPane.showMessageDialog(null, e);
+//            }
+//        }
+        //JasperReport compilado = JasperCompileManager.compileReport("caminho onde seu relatório está");
+            //JasperPrint relatorio = JasperFillManager.fillReport(compilado, null, new ConnectionFactory().getConnection());
+        
     }//GEN-LAST:event_menuRelClientesActionPerformed
 
     /**
