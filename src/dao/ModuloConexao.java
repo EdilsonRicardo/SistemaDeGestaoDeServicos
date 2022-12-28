@@ -11,7 +11,7 @@ public class ModuloConexao {
         //A linha abaixo instancia o driver importado.
         //String driver = "com.mysql.cj.jdbc.Driver"; --> já não é necessário escrever esta linha no java 17
         //A linha abaixo armazena informações referentes ao banco.
-        String url = "jdbc:mysql://localhost:3306/dbinfox";
+        String url = "jdbc:mysql://localhost:3306/dbinfox?characterEncoding=utf-8";
         String user = "root";
         String password = "";
         //Estabelecendo a conexao com o Banco de dados.

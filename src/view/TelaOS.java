@@ -180,7 +180,7 @@ public class TelaOS extends javax.swing.JInternalFrame {
         txtNrServico.setText(null);
         ((DefaultTableModel) tbClientes.getModel()).setRowCount(0);
         cbSituacao.setSelectedItem(" ");
-        
+
         tbClientes.setEnabled(true);
         txtPesquisar.setEnabled(true);
         btnAdicionar.setEnabled(true);
