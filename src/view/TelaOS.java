@@ -63,7 +63,7 @@ public class TelaOS extends javax.swing.JInternalFrame {
             pst.setString(7, txtValorTotal.getText().replace(",", "."));
             pst.setString(8, txtID.getText());
             if (txtID.getText().isEmpty() || txtEquipamento.getText().isEmpty() || txtServico.getText().isEmpty() || cbSituacao.getSelectedItem().equals(" ")) {
-                JOptionPane.showMessageDialog(null, "Preencha os campos obirgatórios.");
+                JOptionPane.showMessageDialog(null, "Preencha os campos obrigatórios.");
             } else {
                 int adicionado = pst.executeUpdate();
                 if (adicionado > 0) {
@@ -231,6 +231,7 @@ public class TelaOS extends javax.swing.JInternalFrame {
         btnEliminar = new javax.swing.JButton();
         btnImprimir = new javax.swing.JButton();
         btnConsultar = new javax.swing.JButton();
+        btnLimparCampos = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -324,7 +325,7 @@ public class TelaOS extends javax.swing.JInternalFrame {
                 .addGap(46, 46, 46))
         );
 
-        jLabel3.setText("Situação:");
+        jLabel3.setText("*Situação:");
 
         cbSituacao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "Entrega Ok", "Orçamento Reprovado", "Aguradando Aprovação", "Aguradando Peças", "Abandonado Pelo Cliente", "Na Bancada", "Retornou" }));
 
@@ -407,7 +408,7 @@ public class TelaOS extends javax.swing.JInternalFrame {
 
         jLabel7.setText("Defeito:");
 
-        jLabel8.setText("Serviço:");
+        jLabel8.setText("*Serviço:");
 
         jLabel9.setText("Técnico:");
 
@@ -452,6 +453,13 @@ public class TelaOS extends javax.swing.JInternalFrame {
             }
         });
 
+        btnLimparCampos.setText("Limpar Campos");
+        btnLimparCampos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimparCamposActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -487,8 +495,10 @@ public class TelaOS extends javax.swing.JInternalFrame {
                                 .addComponent(txtValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(txtEquipamento, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtDefeito, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtServico, javax.swing.GroupLayout.Alignment.LEADING))))
-                .addContainerGap(22, Short.MAX_VALUE))
+                            .addComponent(txtServico, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnLimparCampos)))
+                .addGap(8, 8, 8))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(btnAdicionar)
@@ -525,7 +535,8 @@ public class TelaOS extends javax.swing.JInternalFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(txtDefeito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtDefeito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnLimparCampos))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
@@ -599,6 +610,11 @@ public class TelaOS extends javax.swing.JInternalFrame {
         removerOS();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
+    private void btnLimparCamposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparCamposActionPerformed
+        // TODO add your handling code here:
+        limparCampos();
+    }//GEN-LAST:event_btnLimparCamposActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualizar;
@@ -606,6 +622,7 @@ public class TelaOS extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnConsultar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnImprimir;
+    private javax.swing.JButton btnLimparCampos;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> cbSituacao;
     private javax.swing.JLabel jLabel1;
