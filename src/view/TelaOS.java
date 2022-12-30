@@ -212,7 +212,7 @@ public class TelaOS extends javax.swing.JInternalFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         txtPesquisar = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
+        lblPesquisar = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbClientes = new javax.swing.JTable();
         txtID = new javax.swing.JTextField();
@@ -344,7 +344,7 @@ public class TelaOS extends javax.swing.JInternalFrame {
             }
         });
 
-        jLabel5.setText("Pesquisar:");
+        lblPesquisar.setText("Pesquisar:");
 
         tbClientes = new javax.swing.JTable(){
             public boolean isCellEditable(int rowIndex, int colIndex){
@@ -378,7 +378,7 @@ public class TelaOS extends javax.swing.JInternalFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel5)
+                        .addComponent(lblPesquisar)
                         .addGap(18, 18, 18)
                         .addComponent(txtPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(29, 29, 29)
@@ -396,7 +396,7 @@ public class TelaOS extends javax.swing.JInternalFrame {
                 .addGap(14, 14, 14)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5)
+                    .addComponent(lblPesquisar)
                     .addComponent(jLabel4)
                     .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(34, 34, 34)
@@ -630,7 +630,6 @@ public class TelaOS extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -638,6 +637,7 @@ public class TelaOS extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblPesquisar;
     private javax.swing.JRadioButton rbOrcamento;
     private javax.swing.JRadioButton rbOrdemdeServico;
     private javax.swing.JTable tbClientes;

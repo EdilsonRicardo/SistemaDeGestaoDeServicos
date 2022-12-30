@@ -15,16 +15,45 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.view.JasperViewer;
 import org.apache.commons.dbcp.ConnectionFactory;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+
+import com.itextpdf.text.pdf.PdfWriter;
+import com.lowagie.text.BadElementException;
+import com.lowagie.text.Cell;
+import com.lowagie.text.Element;
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.Table;
+import com.mysql.cj.x.protobuf.MysqlxCrud.Column;
+import java.awt.Color;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Edilson Ricardo
  */
 public class TelaPrincipal extends javax.swing.JFrame {
+
     Connection conexao = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+
     /**
      * Creates new form TelaPrincipal
      */
-    public TelaPrincipal() {
+     public TelaPrincipal() {
         initComponents();
         conexao = ModuloConexao.conector();
         menuRelatorio.setVisible(false);
@@ -35,6 +64,156 @@ public class TelaPrincipal extends javax.swing.JFrame {
         DateFormat formato = DateFormat.getDateInstance(DateFormat.SHORT);
         lblData.setText(formato.format(data));
     }
+    //OS METODOS GERAR RELATORIO E GERARCOMPROVATIVO NAO FORAM USADOS 
+    public void gerarRelatorio() {
+        Document documento = new Document(PageSize.A4);
+        documento.setMargins(40f, 40f, 40f, 40f);
+        try {
+            PdfWriter.getInstance(documento, new FileOutputStream("relatorioCliente.pdf")); //Cria relatorio fisico no HD
+            documento.open(); //Abre o documento criado para que possa ser editado
+            
+            Paragraph tituloDoRelatorio = new Paragraph("Relatório de Clientes Cadastrados");
+            
+            documento.add(tituloDoRelatorio);
+            
+            Table tabela = new Table(5);
+            tabela.setBorder(3);
+            tabela.setBorderWidth(3);
+            tabela.setWidth(100f);
+            tabela.setWidths(new float[]{10f, 30f, 20f, 20f,20f});
+            
+            Paragraph paragrafoID = new Paragraph("ID");
+            paragrafoID.setAlignment(Element.ALIGN_CENTER);
+            
+            Paragraph paragrafoNome = new Paragraph("Nome");
+            paragrafoNome.setAlignment(Element.ALIGN_CENTER);
+            
+            Paragraph paragrafoEndereco = new Paragraph("Endereço");
+            paragrafoEndereco.setAlignment(Element.ALIGN_CENTER);
+            
+            Paragraph paragrafoTelefone = new Paragraph("Telefone");
+            paragrafoTelefone.setAlignment(Element.ALIGN_CENTER);
+            
+            Paragraph paragrafoEmail = new Paragraph("Email");
+            paragrafoEmail.setAlignment(Element.ALIGN_CENTER);
+            
+            Cell celulaID = new Cell();
+            celulaID.add(paragrafoID);
+//            Cell celulaNome = new Cell((Element) paragrafoNome);
+//            Cell celulaEndereco = new Cell((Element) paragrafoEndereco);
+//            Cell celulaTelefone = new Cell((Element) paragrafoTelefone);
+//            Cell celulaEmail = new Cell((Element) paragrafoEmail);
+            
+            tabela.addCell(celulaID);
+//            tabela.addCell(celulaNome);
+//            tabela.addCell(celulaEndereco);
+//            tabela.addCell(celulaTelefone);
+//            tabela.addCell(celulaEmail);
+            
+            //documento.add(tabela);
+            
+            Runtime.getRuntime().exec(new String[]{"cmd.exe","/c", "start","relatorioCliente.pdf"});
+            
+            documento.close();
+            
+        } catch (FileNotFoundException ex) {
+           JOptionPane.showMessageDialog(null, ex);
+
+        } catch (DocumentException ex) {
+           JOptionPane.showMessageDialog(null, ex);
+
+        } catch (IOException ex) {
+                       JOptionPane.showMessageDialog(null, ex);
+
+        } catch (BadElementException ex) {
+                       JOptionPane.showMessageDialog(null, ex);
+            
+        }
+    }
+
+    
+    
+    
+    
+    
+    public void gerarComprovativo() {
+
+        String email = "rufragosystem@gmail.com";
+        String arquivo = "Comprovativo.pdf";
+        Document document = new Document(PageSize.A4);
+        Date date = new Date();
+        ArrayList<Object> arrayUsuarios = new ArrayList<>();
+
+        String sql = "select * from tbclientes";
+        try {
+            ps = conexao.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                PdfWriter.getInstance(document, new FileOutputStream(arquivo));
+                document.open();
+                Paragraph p1 = new Paragraph("Clientes");
+                // Paragraph p2 = new Paragraph("Maputo-Cidade");
+                //Paragraph p3 = new Paragraph("Universidade Eduardo Mondlane");
+                //Paragraph p4 = new Paragraph("Comprovativo");
+
+                Paragraph p6 = new Paragraph(date.toString());
+                Paragraph p7 = new Paragraph(" ");
+                Paragraph p8 = new Paragraph(" ");
+                Paragraph p10 = new Paragraph("          id:         " + "      " + rs.getString(1));
+                Paragraph p11 = new Paragraph("          Nome:           " + "      " + rs.getString(2));
+                Paragraph p12 = new Paragraph("          Endereço:         " + "      ");
+                Paragraph p13 = new Paragraph("          :  " + "      ");
+                Paragraph p14 = new Paragraph("          Data Check-Out: " + "      " + LocalDate.now());
+                Paragraph p15 = new Paragraph("          Consumo:        " + "      "
+                );
+                Paragraph p16 = new Paragraph("          Valor Total:    " + "      ");
+                Paragraph p18 = new Paragraph(" ");
+                Paragraph p19 = new Paragraph("          Contacto:       " + "      " + 01010101010101l);
+                Paragraph p20 = new Paragraph("          Email:          " + "      " + email);
+
+                p1.setAlignment(1);
+                //p2.setAlignment(1);
+                //p3.setAlignment(1);
+                //p4.setAlignment(1);
+                p6.setAlignment(1);
+                p7.setAlignment(0);
+                p8.setAlignment(0);
+                p10.setAlignment(0);
+                p11.setAlignment(0);
+                p12.setAlignment(0);
+                p13.setAlignment(0);
+                p14.setAlignment(0);
+                p15.setAlignment(0);
+                p16.setAlignment(0);
+
+                document.add(p1);
+                //document.add(p2);
+                //document.add(p3);
+                //document.add(p4);
+                document.add(p6);
+                document.add(p7);
+                document.add(p8);
+                document.add(p10);
+                document.add(p11);
+                document.add(p12);
+                document.add(p13);
+                document.add(p14);
+                document.add(p15);
+                document.add(p16);
+                document.add(p18);
+                document.add(p19);
+                document.add(p20);
+
+                document.close();
+            }
+            Desktop.getDesktop().open(new File(arquivo));
+        } catch (Exception e) {
+
+            System.out.println("Erro ao tentar gerar comprovativo em pdf" + e);
+        }
+    }
+
+   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -194,16 +373,16 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private void menuOpcoesSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuOpcoesSairActionPerformed
         // TODO add your handling code here:
         int sair = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja sair?", "Sair", JOptionPane.YES_NO_OPTION);
-        
-        if(sair == JOptionPane.YES_OPTION){
+
+        if (sair == JOptionPane.YES_OPTION) {
             System.exit(0);
         }
     }//GEN-LAST:event_menuOpcoesSairActionPerformed
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         // TODO add your handling code here:
-        
-        
+
+
     }//GEN-LAST:event_formWindowActivated
 
     private void menuCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCadastroActionPerformed
@@ -233,22 +412,24 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     private void menuRelClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRelClientesActionPerformed
         // TODO add your handling code here:
-//        int gerar = JOptionPane.showConfirmDialog(null, "Confirma a impressao","Atencao", JOptionPane.YES_NO_OPTION);
-//        if(gerar == JOptionPane.YES_OPTION){  
+//        int gerar = JOptionPane.showConfirmDialog(null, "Confirma a impressao", "Atencao", JOptionPane.YES_NO_OPTION);
+//        if (gerar == JOptionPane.YES_OPTION) {
 //            try {
-//                //Usando a classe jasperprint para preparar a impressao do relatorio
-////                JasperReport compilado = JasperCompileManager.compileReport("G:\\CODING\\Relatorios do Projecto Java + DB\\Relatorio de Clientes.jasper");
-////                JasperPrint relatorio = JasperFillManager.fillReport(compilado, null, conexao);
-//                JasperPrint print = JasperFillManager.fillReport(getClass().getResourceAsStream("/reportss/Relatorio de Clientes.jasper"), null, conexao);
-//                // A linha abaixo exibe o relatorio atraves da clasee JasperViewer
-//                JasperViewer.viewReport(print, false);
+////                //Usando a classe jasperprint para preparar a impressao do relatorio
+//////                JasperReport compilado = JasperCompileManager.compileReport("G:\\CODING\\Relatorios do Projecto Java + DB\\Relatorio de Clientes.jasper");
+//////                JasperPrint relatorio = JasperFillManager.fillReport(compilado, null, conexao);
+////                JasperPrint print = JasperFillManager.fillReport(getClass().getResourceAsStream("/reportss/Relatorio de Clientes.jasper"), null, conexao);
+////                // A linha abaixo exibe o relatorio atraves da clasee JasperViewer
+////                JasperViewer.viewReport(print, false);
+//                gerarRelatorio();
 //            } catch (Exception e) {
 //                JOptionPane.showMessageDialog(null, e);
 //            }
 //        }
         //JasperReport compilado = JasperCompileManager.compileReport("caminho onde seu relatório está");
-            //JasperPrint relatorio = JasperFillManager.fillReport(compilado, null, new ConnectionFactory().getConnection());
-        
+        //JasperPrint relatorio = JasperFillManager.fillReport(compilado, null, new ConnectionFactory().getConnection());
+
+
     }//GEN-LAST:event_menuRelClientesActionPerformed
 
     /**
